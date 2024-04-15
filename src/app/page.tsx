@@ -1,5 +1,5 @@
 "use client";
-import { Hero } from "@/pages/hero";
+import  Hero  from "@/pages/hero";
 
 export function Home() {
 
