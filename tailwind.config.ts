@@ -24,8 +24,15 @@ const config: Config = {
       animation: {
         "meteor-effect": "meteor 5s linear infinite",
         shimmer: "shimmer 2s linear infinite",
+        'loading-dots': 'loading-dots 1s steps(5, end) infinite',
+
       },
       keyframes: {
+        'loading-dots': {
+          '0%, 20%': { color: 'transparent' },
+          '40%': { color: 'currentColor' },
+          '100%': { color: 'transparent' }
+        },
         shimmer: {
           from: {
             backgroundPosition: "0 0",

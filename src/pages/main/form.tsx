@@ -36,7 +36,7 @@ export default function CollectionForm() {
                 <div className="relative shadow-xl bg-gray-900 border border-gray-800  px-4 py-8 h-full overflow-hidden rounded-2xl flex flex-col justify-end items-start">
 
                   <h1 className="font-bold text-xl text-white mb-4 relative z-50">
-                    {descriptions.length > 0 ? descriptions[currentIndex] : "Loading..."}
+                  {descriptions.length > 0 ? descriptions[currentIndex] : <span className="animate-loading-dots">Loading...</span>}
                   </h1>
         
                   <Meteors number={20} />
