@@ -21,16 +21,19 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* <nav>
-          {!!session &&
-            <Logout/>
-          }
 
-          {!session &&
-            <Link href="loginpage">Login</Link>
-          }
-        </nav> */}
-        {children}</body>
+          {/* <nav>
+            {!!session &&
+              <Logout/>
+            }
+
+            {!session &&
+              <Link href="loginpage">Login</Link>
+            }
+          </nav> */}
+          {children}
+          
+      </body>
     </html>
   );
 }

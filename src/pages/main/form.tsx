@@ -1,10 +1,11 @@
+'use client';
 import { Meteors } from "@/components/ui/meteors";
 import { useEffect, useState } from 'react';
-import "./../app/globals.css";
+import "./../../app/globals.css";
 import { HeroHighlight } from "@/components/ui/hero-highlight";
 
 
-export function Main() {
+export default function CollectionForm() {
   const [descriptions, setDescriptions] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -31,11 +32,11 @@ export function Main() {
     <main className="flex min-h-screen flex-col items-center justify-center space-y-7">
               
               <div className=" w-full relative max-w-xs">
-              <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-500 to-teal-500 transform scale-[0.80] bg-red-500 rounded-full blur-3xl" />
+              <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-orange-200 to-orange-500 transform scale-[0.80] bg-red-500 rounded-full blur-3xl" />
                 <div className="relative shadow-xl bg-gray-900 border border-gray-800  px-4 py-8 h-full overflow-hidden rounded-2xl flex flex-col justify-end items-start">
 
                   <h1 className="font-bold text-xl text-white mb-4 relative z-50">
-                    {descriptions[currentIndex]}
+                    {descriptions.length > 0 ? descriptions[currentIndex] : "Loading..."}
                   </h1>
         
                   <Meteors number={20} />
@@ -59,4 +60,3 @@ export function Main() {
   );
 }
 
-export default Main;

@@ -5,7 +5,7 @@ export default async function getData(req: NextApiRequest, res: NextApiResponse)
   try {
     // Execute SQL query
     const result = await sql`SELECT sentence FROM topics`;
-
+    console.log(result);
     // Check if result.rows exists and is an array
     if (Array.isArray(result.rows)) {
       // Extract sentences into an array using map
