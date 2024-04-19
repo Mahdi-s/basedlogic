@@ -4,12 +4,21 @@ import { sql } from "@vercel/postgres";
 export default async function getData(req: NextApiRequest, res: NextApiResponse) {
   try {
     // Execute SQL query
-    const result = await sql`SELECT sentence FROM topics`;
+    const result = await sql`
+    SELECT sentence, tag, topic 
+    FROM topics
+    `;
+
     console.log(result);
     // Check if result.rows exists and is an array
     if (Array.isArray(result.rows)) {
       // Extract sentences into an array using map
-      const sentences = result.rows.map(item => item.sentence);
+      const sentences = result.rows.map(row => ({
+        sentence: row.sentence,
+        tag: row.tag,
+        topic: row.topic,
+      }));
+      //const sentences = result.rows.map(item => item.sentence);
 
       // Send the sentences array as a response
       res.status(200).json(sentences);
