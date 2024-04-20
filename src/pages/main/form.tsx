@@ -174,6 +174,14 @@ export default function CollectionForm() {
               <h1 className="font-bold text-xl text-white mb-4 relative z-50">
                 {sentences.length > 0 ? sentences[currentIndex].sentence.toString() : <span className="animate-loading-dots">Loading...</span>}
               </h1>
+
+              <p className="font-bold text-neutral-700 text-white mb-4 relative z-50">
+                {sentences.length > 0 ? `Topic: ${sentences[currentIndex].topic}` : 'Loading...'}
+              </p>
+              <p className="font-bold text-neutral-700 text-white mb-4 relative z-50">
+                {sentences.length > 0 ? `Affiliation: ${sentences[currentIndex].tag}` : 'Loading...'}
+              </p>
+              
               <Meteors number={20} />
             </div>
           </div>
