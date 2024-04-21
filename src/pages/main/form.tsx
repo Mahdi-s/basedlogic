@@ -35,23 +35,36 @@ interface InteractionData {
   conservative: { agree: number, disagree: number }
 }
 
-// Helper function to get the initial interaction data from sessionStorage or set default
-function getInitialInteractionData() {
-  if (typeof window !== 'undefined') {
-    const data = sessionStorage.getItem('interactionData');
-    return data ? JSON.parse(data) : { liberal: { agree: 0, disagree: 0 }, conservative: { agree: 0, disagree: 0 } };
-  }
-  return { liberal: { agree: 0, disagree: 0 }, conservative: { agree: 0, disagree: 0 } }; // Default if not in a browser environment
+function ensureDataIntegrity(data) {
+  return {
+    liberal: { agree: 0, disagree: 0, ...data.liberal },
+    conservative: { agree: 0, disagree: 0, ...data.conservative }
+  };
 }
 
+// Use this function when getting initial data
+function getInitialInteractionData() {
+  if (typeof window !== 'undefined') {
+    const storedData = sessionStorage.getItem('interactionData');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      return ensureDataIntegrity(parsedData);
+    }
+  }
+  return ensureDataIntegrity({});
+}
+
+
+
+
 export default function CollectionForm() {
-  // const [sentences, setSentences] = useState<{sentence: string, tag: string, topic: string}[]>([]);
-  // const [currentIndex, setCurrentIndex] = useState(0);
   const [sentences, setSentences] = useState<Sentence[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [interactionData, setInteractionData] = useState(getInitialInteractionData())//{ liberal: { agree: 0, disagree: 0 }, conservative: { agree: 0, disagree: 0 } });
   const [history, setHistory] = useState<{index: number, data: InteractionData}[]>([]);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,10 +73,8 @@ export default function CollectionForm() {
       setSentences(data);
     };
 
-    // Simulate user login check (replace with actual auth check logic)
+    // TODO: Simulate user login check (replace with actual auth check logic)
     setIsUserLoggedIn(false); // Set true if user is logged in
-
-
     fetchData();
 
     if (!isUserLoggedIn) {
@@ -74,51 +85,25 @@ export default function CollectionForm() {
   }, [isUserLoggedIn]);
 
 
-
   const handleButtonClick = (increment: number, action: 'agree' | 'disagree' | 'rewind') => {
-    
-      if (action === 'rewind' && history.length > 0) {
-        const previousState = history.pop();
-        setHistory(history);
-        setInteractionData(previousState?.data || interactionData);
-        setCurrentIndex(previousState?.index || 0);
-      } else {
-        const newHistory = [...history, { index: currentIndex, data: interactionData }];
-        setHistory(newHistory);
-
-      const { tag, topic } = sentences[currentIndex];
-      const update: { 
-        liberal: { [key: string]: { agree: number, disagree: number } }, 
-        conservative: { [key: string]: { agree: number, disagree: number } }, 
-        [key: string]: any 
-      } = { 
-        liberal: {}, 
-        conservative: {} 
-      };
-    
-      if (tag === 'liberal' || tag === 'conservative') {
-        if (!update[tag][topic]) {
-          update[tag][topic] = { agree: 0, disagree: 0 };
-        }
-        update[tag][topic][action] += 1;
+    if (action === 'rewind' && history.length > 0) {
+      const previousState = history.pop() || { index: currentIndex, data: interactionData };
+      setInteractionData(previousState.data);
+      setCurrentIndex(previousState.index);
+    } else {
+      const newHistory = [...history, { index: currentIndex, data: JSON.parse(JSON.stringify(interactionData)) }];
+      setHistory(newHistory);
+      const newData = {...interactionData};
+      if (!newData[sentences[currentIndex].tag]) {
+        newData[sentences[currentIndex].tag] = { agree: 0, disagree: 0 };
       }
-
-
-
-      // Calculate the totals for each tag
-      for (const tag in update) {
-        for (const topic in update[tag]) {
-          totals[tag].agree += update[tag][topic].agree;
-          totals[tag].disagree += update[tag][topic].disagree;
-        }
-      }
+      newData[sentences[currentIndex].tag][action] += increment;
+      setInteractionData(newData);
+      setCurrentIndex((currentIndex + increment) % sentences.length);
 
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem('interactionData', JSON.stringify(update));
+        sessionStorage.setItem('interactionData', JSON.stringify(newData));
       }
-    
-      setInteractionData(totals);
-      setCurrentIndex((currentIndex + increment + sentences.length) % sentences.length);
     }
   };
 
