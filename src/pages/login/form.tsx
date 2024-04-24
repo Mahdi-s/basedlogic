@@ -52,7 +52,7 @@ export default function Login() {
           <form className="my-8" onSubmit={handleSubmit}>
             <LabelInputContainer className="mb-4">
               <Label htmlFor="email">Email Address</Label>
-              <Input id="email" placeholder="sample@server.com" type="email" name="email"  />
+              <Input id="email" placeholder="john.doe@gmail.com" type="email" name="email"  />
             </LabelInputContainer>
             <LabelInputContainer className="mb-4">
               <Label htmlFor="password">Password</Label>

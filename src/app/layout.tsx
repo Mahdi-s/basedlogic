@@ -3,7 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
-import Logout from "../pages/logout";
+import Nav from "@/components/nav";
+import { HeroHighlight } from "@/components/ui/hero-highlight";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,18 +23,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+          <Nav />
+          <div>{children}</div>
 
-          {/* <nav>
-            {!!session &&
-              <Logout/>
-            }
-
-            {!session &&
-              <Link href="loginpage">Login</Link>
-            }
-          </nav> */}
-          {children}
-          
       </body>
     </html>
   );
