@@ -5,12 +5,15 @@ import { sql } from "@vercel/postgres";
 import NextAuth from "next-auth";
 
 
+
 const clientId = process.env.GOOGLE_ID;
 const clientSecret = process.env.GOOGLE_SECRET;
 
 if (!clientId || !clientSecret) {
     throw new Error('Missing Google ID or secret');
 }
+
+
 
 export const options = {
     callbacks: {

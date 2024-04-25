@@ -1,32 +1,31 @@
-import type { Metadata } from "next";
+//import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { getServerSession } from "next-auth";
-import Link from "next/link";
-import Nav from "@/components/nav";
-import { HeroHighlight } from "@/components/ui/hero-highlight";
+import AuthProvider from "@/components/AuthProviders";
 
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Opinion Collector by BasedLogic",
-  description: "Formulate, Collect, Enhance",
-};
+// export const metadata: Metadata = {
+//   title: "Opinion Collector by BasedLogic",
+//   description: "Formulate, Collect, Enhance",
+// };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-          <Nav />
-          <div>{children}</div>
 
-      </body>
+  return (
+    <AuthProvider>
+    <html lang="en">
+        
+          <body className={inter.className}>
+              {children}
+          </body>
+        
     </html>
+    </AuthProvider>
   );
 }
