@@ -7,9 +7,6 @@ import { Meteors } from "@/components/ui/meteors";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
-import { useSession } from "next-auth/react";
-//import Nav from "@/components/nav";
-
 // Register ChartJS components
 ChartJS.register(
   CategoryScale,
@@ -60,55 +57,28 @@ function ensureDataIntegrity(data) {
 }
 
 // Use this function when getting initial data
-// function getInitialInteractionData() {
-//   if (typeof window !== 'undefined') {
-//     const storedData = sessionStorage.getItem('interactionData');
-//     if (storedData) {
-//       const parsedData = JSON.parse(storedData);
-//       return ensureDataIntegrity(parsedData);
-//     }
-//   }
-//   return ensureDataIntegrity({});
-// }
-// function getInitialInteractionData() {
-//   const storedData = sessionStorage.getItem('interactionData');
-//   if (storedData) {
-//     const parsedData = JSON.parse(storedData);
-//     return ensureDataIntegrity(parsedData);
-//   }
-//   return ensureDataIntegrity({});
-// }
+function getInitialInteractionData() {
+  if (typeof window !== 'undefined') {
+    const storedData = sessionStorage.getItem('interactionData');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      return ensureDataIntegrity(parsedData);
+    }
+  }
+  return ensureDataIntegrity({});
+}
 
 
 export default function CollectionForm() {
-
-  const { data: session, status } = useSession()
-
-
   const [sentences, setSentences] = useState<Sentence[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [interactionData, setInteractionData] = useState({
-    liberal: { agree: 0, disagree: 0 },
-    conservative: { agree: 0, disagree: 0 },
-  })//{ liberal: { agree: 0, disagree: 0 }, conservative: { agree: 0, disagree: 0 } });
+  const [interactionData, setInteractionData] = useState(getInitialInteractionData())//{ liberal: { agree: 0, disagree: 0 }, conservative: { agree: 0, disagree: 0 } });
   const [history, setHistory] = useState<{index: number, data: InteractionData}[]>([]);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter(); // Use Next.js useRouter hook for navigation
 
- 
-  useEffect(() => {
-    function getInitialInteractionData() {
-      const storedData = sessionStorage.getItem('interactionData');
-      if (storedData) {
-        const parsedData = JSON.parse(storedData);
-        return ensureDataIntegrity(parsedData);
-      }
-      return ensureDataIntegrity({});
-    }
 
-    setInteractionData(getInitialInteractionData());
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -205,45 +175,9 @@ export default function CollectionForm() {
   return (
 
     <>
-    
     <Modal isOpen={showModal} onClose={() => setShowModal(false)} onSignUp={handleSignUp} />
 
-    
     <HeroHighlight className="flex flex-col justify-center items-center space-y-2">
-
-            {session ? (
-              <>
-              <button className="w-full sm:w-1/3 lg:w-auto p-[3px] relative mt-5" onClick={() => handleButtonClick(0, 'rewind')}>
-                <div className="absolute inset-0 bg-orange-100 rounded-lg" />
-                <div className="px-4 py-3 bg-black relative group transition duration-200 text-white hover:bg-transparent text-xl lg:text-2xl">
-                  Dashboard
-                </div>
-              </button>
-
-              <button className="w-full sm:w-1/3 lg:w-auto p-[3px] relative mt-5" onClick={() => handleButtonClick(0, 'rewind')}>
-                <div className="absolute inset-0 bg-orange-100 rounded-lg" />
-                <div className="px-4 py-3 bg-black relative group transition duration-200 text-white hover:bg-transparent text-xl lg:text-2xl">
-                  Logout
-                </div>
-              </button>
-              </>
-            ) : (
-              <>
-              <button className="w-full sm:w-1/3 lg:w-auto p-[3px] relative mt-5" onClick={() => handleButtonClick(0, 'rewind')}>
-                <div className="absolute inset-0 bg-orange-100 rounded-lg" />
-                <div className="px-4 py-3 bg-black relative group transition duration-200 text-white hover:bg-transparent text-xl lg:text-2xl">
-                  Login
-                </div>
-              </button>
-
-              <button className="w-full sm:w-1/3 lg:w-auto p-[3px] relative mt-5" onClick={() => handleButtonClick(0, 'rewind')}>
-                <div className="absolute inset-0 bg-orange-100 rounded-lg" />
-                <div className="px-4 py-3 bg-black relative group transition duration-200 text-white hover:bg-transparent text-xl lg:text-2xl">
-                  Signup to save your session!
-                </div>
-              </button>
-              </>
-            )}
 
         <main className="flex min-h-screen flex-col items-center justify-center p-4 lg:p-7 space-y-4 lg:space-y-7">
           <div className="w-full max-w-sm lg:max-w-lg xl:max-w-2xl relative">
@@ -300,4 +234,3 @@ export default function CollectionForm() {
 
   );
 }
-
