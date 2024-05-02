@@ -17,11 +17,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   // },
   providers: [
     CredentialsProvider({
+      name:"Credentials",
       credentials: {
         email: { label: "Email", type: "text", placeholder: "you@example.com" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials || !credentials.email || !credentials.password) {
           throw new Error('Missing credentials');
         }

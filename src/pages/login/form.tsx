@@ -1,4 +1,5 @@
-import React, { FormEvent } from "react";
+"use client";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/../../utils/cn";
@@ -9,46 +10,32 @@ import { motion } from "framer-motion";
 import { signIn } from "@/auth";
 
 export default function Login() {
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useRouter();
+  const [submit, setSubmit] = useState(false);
 
-  //   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-  //     event.preventDefault();
-  //     const formData = new FormData(event.currentTarget);
-  //     const response = await signIn('credentials', {
-  //       email: formData.get('email'),
-  //       password: formData.get('password'),
-  //       redirect: false,
-  //     });
-  //     console.log("Login response");
-  //     console.log({response});
-  //       if (!response?.error) {
-  //         navigate.push('/main');
-  //         //navigate.refresh();
-  //       } else {
-  //         alert('Failed to Log In');
-  //       }
-  // };
+  useEffect(() => {
+    if (submit) {
+      const signInUser = async () => {
+        const response = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
+        console.log("Login response");
+        console.log({ response });
+        if (!response?.error) {
+          navigate.push("/main");
+        }
+      };
+      signInUser();
+    }
+  }, [submit]);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get("email");
-    const password = formData.get("password");
-
-    const response = await signIn("credentials", {
-      email,
-      password,
-      redirect: true,
-      callbackUrl: "/main",
-    });
-
-    // if (!response?.error) {
-    //   navigate.push("/main");
-    // } else {
-    //   alert("Failed to Log In");
-    // }
+    setSubmit(true);
   };
 
   return (
