@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import "./../../app/globals.css";
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { HeroHighlight } from "@/components/ui/hero-highlight";
 import { Meteors } from "@/components/ui/meteors";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
@@ -82,7 +82,7 @@ export default function CollectionForm() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/api/getData');
+      const response = await fetch('api/getData');
       const data = await response.json();
       setSentences(data);
       setIsUserLoggedIn(false);

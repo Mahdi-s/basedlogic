@@ -6,7 +6,7 @@ import { cn } from "@/../../utils/cn";
 import { HeroHighlight } from "@/components/ui/hero-highlight";
 import "./../../app/globals.css";
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 
 
