@@ -1,5 +1,5 @@
 import CollectionForm from './form';
 
-export default function Main() {
+export default function collectionPage() {
   return <CollectionForm />;
 }

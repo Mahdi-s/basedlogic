@@ -2,14 +2,11 @@ import Hero from "./form";
 import "./../../app/globals.css";
 import { auth } from "@/auth";
 
-
-
-export default function Page({ user }) {
+export default function HeroPage({ user }) {
   return (
       <Hero user={user} />
   )
 }
-
 
 export async function getServerSideProps() {
   const session = await auth();

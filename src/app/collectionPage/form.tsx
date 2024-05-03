@@ -82,7 +82,7 @@ export default function CollectionForm() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('api/getData');
+      const response = await fetch('/api/getData');
       const data = await response.json();
       setSentences(data);
       setIsUserLoggedIn(false);

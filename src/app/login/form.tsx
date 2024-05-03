@@ -1,41 +1,21 @@
 "use client";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/../../utils/cn";
 import { HeroHighlight } from "@/components/ui/hero-highlight";
 import "./../../app/globals.css";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { signIn } from "@/auth";
+import { IconBrandGoogle } from "@tabler/icons-react";
+import { loginUser } from "./actions";
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useRouter();
-  const [submit, setSubmit] = useState(false);
-
-  useEffect(() => {
-    if (submit) {
-      const signInUser = async () => {
-        const response = await signIn("credentials", {
-          email,
-          password,
-          redirect: false,
-        });
-        console.log("Login response");
-        console.log({ response });
-        if (!response?.error) {
-          navigate.push("/main");
-        }
-      };
-      signInUser();
-    }
-  }, [submit]);
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setSubmit(true);
+export default function LoginForm() {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    useEffect(() => {
+      e.preventDefault();
+      loginUser(e);
+      console.log("Form submitted");
+    }, []);
   };
 
   return (
@@ -74,6 +54,19 @@ export default function Login() {
                 className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
                 type="submit"
               >
+                <div className="flex justify-center items-center space-x-2">
+                  <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
+                  <span className="text-neutral-700 dark:text-neutral-300 text-sm">
+                    Google
+                  </span>
+                </div>
+                <BottomGradient />
+              </button>
+
+              <button
+                className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                type="submit"
+              >
                 Log In &rarr;
                 <BottomGradient />
               </button>
@@ -86,8 +79,6 @@ export default function Login() {
                 <BottomGradient />
               </button>
             </div>
-
-            {/* <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" /> */}
           </form>
         </div>
       </motion.div>

@@ -1,24 +1,21 @@
-'use client';
+"use client";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
-import React, { useEffect, useState } from 'react';
+import React from "react";
 import Link from "next/link";
 import "./../../app/globals.css";
-import { auth } from "@/auth";
 import { User } from "next-auth";
 
 interface HeroProps {
-  user: User
+  user: User;
 }
 
-export default function Hero({user}: {user: HeroProps | undefined}) {
-
-
+export default function Hero({ user }: { user: HeroProps | undefined }) {
   const router = useRouter();
 
   const navigateToOpinionCollection = () => {
-    router.push("/main");
+    router.push("/collectionPage");
   };
 
   return (
@@ -75,7 +72,7 @@ export default function Hero({user}: {user: HeroProps | undefined}) {
             <button
               onClick={navigateToOpinionCollection}
               className="p-[3px] relative mt-5"
-            > 
+            >
               <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-300 rounded-lg" />
               <div className="px-3 py-2 bg-black rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent text-2xl">
                 Try it, It&apos;s Free!
@@ -83,7 +80,10 @@ export default function Hero({user}: {user: HeroProps | undefined}) {
             </button>
 
             <p className="text-center text-neutral-700 dark:text-white">
-              Already a user? <Link href="/login" className="hover:underline">Log in</Link>
+              Already a user?{" "}
+              <Link href="/login" className="hover:underline">
+                Log in
+              </Link>
             </p>
           </>
         )}
