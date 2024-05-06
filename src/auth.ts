@@ -1,15 +1,17 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth from "next-auth";
 import { Adapter } from "next-auth/adapters";
 import Google from "next-auth/providers/google";
-import prisma from "./lib/prisma";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
-import { sql } from "@vercel/postgres";
+import PocketBase from 'pocketbase';
+import { NextRequest, NextResponse } from "next/server";
+
+
+const pb = new PocketBase('http://127.0.0.1:8090');
+
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
-  //adapter: PrismaAdapter(prisma) as Adapter,
   // callbacks: {
   //   session({ session, user }) {
   //     return session;
@@ -35,24 +37,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error('Email is required');
         }
 
-        const response = await sql`
-          SELECT * FROM users WHERE email = ${credentials.email}
-        `;
+        // const response = await sql`
+        //   SELECT * FROM users WHERE email = ${credentials.email}
+        // `;
 
-        const user = response.rows[0];
-        if (!user) {
+        const authData = await pb.collection('users').authWithPassword(credentials.email, credentials.password);
+
+        //const response = await pb.collection('users').getFirstListItem(`email=${credentials.email}`);
+
+
+        
+        if (!pb.authStore.isValid) {
           throw new Error('No user found with the email');
         }
 
-        const passwordCorrect = await compare(credentials.password, user.password);
-        if (!passwordCorrect) {
-          throw new Error('Incorrect password');
-        }
+        console.log(pb.authStore.model.id);
+        pb.authStore.clear();
 
-        return { id: user.id, email: user.email };
+        return { id: pb.authStore.model.id, email: credentials.email };
       }
     }),
-    //Google
+    Google
   ],
   
 });

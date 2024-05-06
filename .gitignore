@@ -40,3 +40,7 @@ next-env.d.ts
 .vercel
 
 .vercel
+
+
+# database files
+/pb_data
