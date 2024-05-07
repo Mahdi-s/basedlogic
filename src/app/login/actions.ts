@@ -3,6 +3,8 @@ import { FormEvent } from "react";
 import { useRouter } from "next/router";
 
 export async function loginUser(event: FormEvent) {
+    console.log("In Login");
+
     event.preventDefault();
     const target = event.target as typeof event.target & {
         email: { value: string };
