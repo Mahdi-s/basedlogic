@@ -82,10 +82,10 @@ export default function CollectionForm() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/api/getData');
-      const data = await response.json();
-      setSentences(data);
-      setIsUserLoggedIn(false);
+      // const response = await fetch('/api/getData');
+      // const data = await response.json();
+      // setSentences(data);
+      // setIsUserLoggedIn(false);
     };
 
      // TODO: Simulate user login check (replace with actual auth check logic)

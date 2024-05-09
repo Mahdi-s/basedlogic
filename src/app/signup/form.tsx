@@ -1,59 +1,35 @@
 'use client';
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/../../utils/cn";
-import { HeroHighlight } from "@/components/ui/hero-highlight";
 import "./../../app/globals.css";
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-
+import CreateUser from "./actions";
 
 
 export default  function SignupForm(){
-
-
-    const [password, setPassword] = useState('');
-    const [retypePassword, setRetypePassword] = useState('');
     const router = useRouter();
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 
         event.preventDefault();
-        if (password !== retypePassword) {
-          alert('Passwords do not match!');
-          return;
-        }
         const formData = new FormData(event.currentTarget);
-        const response = await fetch('/api/auth/register',{
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            firstname: formData.get('firstname'),
-            lastname: formData.get('lastname'),
-            email: formData.get('email'),
-            password: formData.get('password'),
-          }),
-        });
-
-        if (!response.ok) {
-          console.error(`Error: ${response.status}`);
-          const errorData = await response.text();
-          console.error(errorData);
-          return;
-        }
-
-        router.push('/main');
-
+        const credentials = {
+          username: formData.get('username'),
+          email: formData.get('email'),
+          password: formData.get('password'),
+        };
+        console.log("In form - Credentials: ");
+        console.log(credentials);
+        const respone = CreateUser(credentials);
+        router.push('/collectionPage');
         console.log("Sign up Click Detected");
-        console.log({response});
     };
         
 
     return (   
-        <HeroHighlight className="flex flex-col justify-center items-center space-y-2">
 
         <motion.div
         initial={{ x: 100, opacity: 0 }}
@@ -70,7 +46,7 @@ export default  function SignupForm(){
         </p>
 
         <form className="my-8" onSubmit={handleSubmit}>
-          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
+          {/* <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
           <LabelInputContainer>
             <Label htmlFor="firstname">First name</Label>
             <Input id="firstname" placeholder="John" type="text" name="firstname" />
@@ -79,18 +55,22 @@ export default  function SignupForm(){
             <Label htmlFor="lastname">Last name</Label>
             <Input id="lastname" placeholder="Doe" type="text" name="lastname" />
           </LabelInputContainer>
-          </div>
+          </div> */}
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="username">Username</Label>
+            <Input id="username" placeholder="jimbeans" type="text"  name="username"/>
+          </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
             <Input id="email" placeholder="sample@server.com" type="email"  name="email"/>
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" placeholder="••••••••" type="password" name="password" onChange={e => setPassword(e.target.value)}/>
+            <Input id="password" placeholder="••••••••" type="password" name="password" />
           </LabelInputContainer>
           <LabelInputContainer className="mb-8">
             <Label htmlFor="Retype Password">Retype Password</Label>
-            <Input id="retypePassword" placeholder="••••••••" type="password" onChange={e => setRetypePassword(e.target.value)}/>
+            <Input id="retypePassword" placeholder="••••••••" type="password" />
           </LabelInputContainer>
 
           <button
@@ -106,7 +86,6 @@ export default  function SignupForm(){
         </form>
       </div>
       </motion.div>
-  </HeroHighlight>
      )
      
 }

@@ -1,8 +1,8 @@
+"use server";
 import { signIn } from "@/auth";
 import { FormEvent } from "react";
-import { useRouter } from "next/router";
 
-export async function loginUser(event: FormEvent) {
+export async function credentialLogin(event: FormEvent) {
     console.log("In Login");
 
     event.preventDefault();
@@ -22,8 +22,6 @@ export async function loginUser(event: FormEvent) {
     console.log({ response });
     if (!response?.error) {
       console.log(`Username: ${response.user.username}`); // Log the username
-      const router = useRouter();
-      router.push('/collectionPage');
       return true;
     }
     console.error("Login failed");

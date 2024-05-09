@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 //import AuthProvider from "@/components/AuthProviders";
 import { SessionProvider } from "next-auth/react";
-
+import { HeroHighlight } from "@/components/ui/hero-highlight";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,15 +17,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (     
+  return (
     <html lang="en">
-        
-            <body className={inter.className}>
-              <SessionProvider>
-                {children}
-              </SessionProvider>
-            </body>
-        
+      <body className={inter.className}>
+        <SessionProvider>
+          <HeroHighlight className="flex flex-col justify-center items-center space-y-2">
+            {children}
+          </HeroHighlight>
+        </SessionProvider>
+      </body>
     </html>
   );
 }

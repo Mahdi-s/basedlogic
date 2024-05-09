@@ -1,25 +1,30 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { hash } from "bcrypt";
-import { sql } from "@vercel/postgres";
+import db from "@/../utils/db";
+import { hash } from "bcryptjs";
+import { NextResponse } from 'next/server';
 
-export default async function POST(req: NextApiRequest, res: NextApiResponse) {
-    try {
-        const {firstname, lastname, email, password} = req.body;
-        //validate password
-        //use zod to validate input
-        //console.log("In Route")
-        //console.log({firstname, lastname, email, password})
 
-        const hashedPassword = await hash(password, 10);
+export default async function POST(request: Request) {
+  try {
+    const { username, email, password } = await request.json();
+    // validate email and password
+    console.log("registering user");
+    console.log({ username, email, password });
 
-        const response = await sql`
-            INSERT INTO users (email, firstname, lastname,  password)
-            VALUES (${email}, ${firstname}, ${lastname},  ${hashedPassword})
-        `;
+    //const hashedPassword = await hash(password, 10);
 
-        return res.status(200).json({message: "success"});
-    } catch(e) {
-        console.log({e});
-        return res.status(500).json({message: "An error occurred"});
-    }
+    const record = await db.register(username, email, password);
+    console.log("record");
+    console.log({ record });
+    
+  } catch (e) {
+    console.log({ e });
+  }
+
+  return NextResponse.json({ message: "success" });
+
 }
+
+
+export const config = {
+    runtime: 'edge',
+};
