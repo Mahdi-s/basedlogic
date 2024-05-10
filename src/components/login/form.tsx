@@ -1,23 +1,40 @@
 "use client";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { signIn } from "@/auth";
 import { IconBrandGoogle } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
-import { credentialLogin } from "./actions";
-import { useEffect } from "react";
+//import { credentialLogin } from "./actions";
 import React, { FormEvent } from "react";
 import { cn } from "@/../utils/cn";
 
 export default function Form() {
   const router = useRouter();
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>) => {
-    useEffect(() => {
-      console.log("In Use effect");
-      credentialLogin(e);
-      console.log("Form submitted");
-    }, []);
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData(e.currentTarget);
+
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.get("email"),
+          password: formData.get("password"),
+          redirect: false,
+        }),
+      });
+      console.log({ response });
+    } catch (error) {
+      console.error({ error });
+    }
+
+    // if (!response?.error) {
+    //   router.push("/collectionPage");
+    //   router.refresh();
+    // }
   };
 
   const handleSignup = (e: React.MouseEvent<HTMLButtonElement>) => {

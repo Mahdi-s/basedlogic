@@ -63,8 +63,5 @@ export class DatabaseClient {
 
 export const db = new DatabaseClient();
 
-// export const config = {
-//     runtime: 'edge',
-// };
 
 export default db;

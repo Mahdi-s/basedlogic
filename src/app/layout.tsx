@@ -4,6 +4,7 @@ import "./globals.css";
 //import AuthProvider from "@/components/AuthProviders";
 import { SessionProvider } from "next-auth/react";
 import { HeroHighlight } from "@/components/ui/hero-highlight";
+import NavBar from "@/components/ui/NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SessionProvider>
-          <HeroHighlight className="flex flex-col justify-center items-center space-y-2">
+          <HeroHighlight>
+            <NavBar />
             {children}
           </HeroHighlight>
         </SessionProvider>

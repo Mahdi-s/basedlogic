@@ -3,13 +3,11 @@ import { motion } from "framer-motion";
 import { Highlight } from "@/components/ui/hero-highlight";
 import React from "react";
 import "./../../app/globals.css";
-import  Buttons  from "@/components/hero/buttons";
-
-
+import Buttons from "@/components/hero/buttons";
 
 export default function Hero({ user }) {
-
   return (
+    <div className="flex flex-col justify-center items-center space-y-2">
       <motion.h1
         initial={{
           opacity: 0,
@@ -30,9 +28,8 @@ export default function Hero({ user }) {
         <Highlight className="text-black dark:text-white">
           contribute to democracy.
         </Highlight>
-        <Buttons user = {user}/>
+        <Buttons user={user} />
       </motion.h1>
-
-     
+    </div>
   );
 }
