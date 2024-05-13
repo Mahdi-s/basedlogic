@@ -1,53 +1,35 @@
-"use client";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { IconBrandGoogle } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
 //import { credentialLogin } from "./actions";
 import React, { FormEvent } from "react";
 import { cn } from "@/../utils/cn";
+import { signIn } from "@/auth";
 
 export default function Form() {
-  const router = useRouter();
 
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData(e.currentTarget);
-
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.get("email"),
-          password: formData.get("password"),
-          redirect: false,
-        }),
-      });
-      console.log({ response });
-    } catch (error) {
-      console.error({ error });
-    }
-
-    // if (!response?.error) {
-    //   router.push("/collectionPage");
-    //   router.refresh();
-    // }
-  };
-
-  const handleSignup = (e: React.MouseEvent<HTMLButtonElement>) => {
-    router.push("/signup");
-  };
-
-  const handleGoogleSignup = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("In Use effect");
-    //TODO: Implement GOogle Singup function
-    console.log("Form submitted");
-  };
   return (
-    <form className="my-8" onSubmit={handleLogin}>
+    <form
+      className="my-8"
+      action={async (formData) => {
+        "use server";
+
+
+        console.log("1 In handle login");
+        const email = formData.get("email");
+        const password = formData.get("password");
+
+        try {
+          const response = await signIn("credentials", { email, password });
+          console.log("In handle login");
+          console.log(response);
+        } catch (error) {
+          console.error("Error during sign in:", error);
+          // Handle error here, for example show a notification to the user
+        }
+
+      }}
+    >
       <LabelInputContainer className="mb-4">
         <Label htmlFor="email">Email Address</Label>
         <Input
@@ -76,7 +58,7 @@ export default function Form() {
           <BottomGradient />
         </button>
 
-        <button
+        {/* <button
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="button"
           onClick={handleGoogleSignup}
@@ -88,16 +70,16 @@ export default function Form() {
             </span>
           </div>
           <BottomGradient />
-        </button>
+        </button> */}
 
-        <button
+        {/* <button
           className="bg-transparent relative group/btn block w-1/2 text-white  h-10 font-medium"
           type="button"
           onClick={handleSignup}
         >
           Sign Up
           <BottomGradient />
-        </button>
+        </button> */}
       </div>
     </form>
   );

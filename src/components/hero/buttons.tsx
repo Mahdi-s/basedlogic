@@ -37,7 +37,7 @@ export default function Buttons({ user }: { user: HeroProps | undefined }) {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-300 rounded-lg" />
           <div className="px-3 py-2 bg-black rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent text-2xl">
-            Welcome Back {user.user.id}!
+            Welcome Back {user.user.name}!
           </div>
         </button>
       ) : (
@@ -53,9 +53,9 @@ export default function Buttons({ user }: { user: HeroProps | undefined }) {
           </button>
 
           <p className="text-sm text-center text-neutral-700 dark:text-white">
-            Already a user?{" "}
-            <Link href="/login" className="hover:underline">
-              Log in
+            Enhance your exprience!{" "}
+            <Link href="/signup" className="hover:underline">
+              Sign Up
             </Link>
           </p>
         </>

@@ -2,12 +2,10 @@ import NextAuth from "next-auth";
 import { Adapter } from "next-auth/adapters";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import PocketBase from "pocketbase";
 import { NextRequest, NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { signInSchema } from "./lib/zod";
-
-const pb = new PocketBase("http://127.0.0.1:8090");
+import db from "@/../utils/db";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -18,8 +16,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         try {
-          let user = null;
-
           if (!credentials || !credentials.email || !credentials.password) {
             throw new Error("Missing credentials");
           }
@@ -34,31 +30,36 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             credentials
           );
 
+          const result = await db.authenticate(email, password);
 
-          const authData = await pb
-            .collection("users")
-            .authWithPassword(email, password);
-
-          if (!authData) {
+          if (!result) {
             throw new Error("Error Recieving Information From Database");
           }
+          console.log("result --- ");
+          console.log(result);
+          console.log("---------- ");
 
-          if (pb.authStore.model) {
-            console.log(pb.authStore.model.id);
-            //return NextResponse.redirect("/collectionPage");
-            return {
-              id: authData.record.username,
-              email: email,
-              //NextResponse.redirect(redirect_to),
-            };
-          } else {
-            return null; // Explicitly return null if no user model is found
-          }
+          const user = {
+            id: result.record.id,
+            username: result.record.username,
+          };
+
+          return user;
         } catch (error) {
-          if (error instanceof ZodError) {
-            return null;
+          console.error(error);
+
+          if (error.message === "Error Recieving Information From Database") {
+            // Handle authentication failure
+            throw new Error("Invalid email or password");
+          } else {
+            // Rethrow other errors to be handled by NextAuth
+            throw error;
           }
-          throw error; // Rethrow other errors to be handled by NextAuth
+          
+          // if (error instanceof ZodError) {
+          //   return null;
+          // }
+          // throw error; // Rethrow other errors to be handled by NextAuth
         }
       },
     }),

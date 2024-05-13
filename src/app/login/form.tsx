@@ -1,5 +1,3 @@
-'use client';
-
 import React, { FormEvent } from "react";
 import "./../../app/globals.css";
 import Form from "@/components/login/form";
