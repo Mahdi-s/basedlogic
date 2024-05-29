@@ -28,6 +28,7 @@ yarn-error.log*
 # local env files
 .env*.local
 .env*.development
+.env
 
 # vercel
 .vercel
@@ -39,3 +40,7 @@ next-env.d.ts
 .vercel
 
 .vercel
+
+
+# database files
+/pb_data

@@ -1,10 +1,10 @@
 "use client";
-import  Hero  from "@/pages/hero";
+import  HeroPage  from "./hero";
 
-export function Home() {
 
+export function Home({ user }) {
   return (
-    <Hero></Hero>
+    <HeroPage user={user} />
   );
 }
 

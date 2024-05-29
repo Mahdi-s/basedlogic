@@ -26,8 +26,19 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%; /* This ensures the navbar spans the full width of the viewport */
+  z-index: 1000; /* This ensures the navbar stays on top of other elements */
+  background: inherit; /* This makes the navbar have the same background as its parent */
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 };
+
+

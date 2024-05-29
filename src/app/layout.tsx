@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { getServerSession } from "next-auth";
-import Link from "next/link";
-import Nav from "@/components/nav";
+//import AuthProvider from "@/components/AuthProviders";
+import { SessionProvider } from "next-auth/react";
 import { HeroHighlight } from "@/components/ui/hero-highlight";
-
+import NavBar from "@/components/ui/NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,18 +13,20 @@ export const metadata: Metadata = {
   description: "Formulate, Collect, Enhance",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
   return (
     <html lang="en">
       <body className={inter.className}>
-          <Nav />
-          <div>{children}</div>
-
+        <SessionProvider>
+          <HeroHighlight>
+            <NavBar />
+            {children}
+          </HeroHighlight>
+        </SessionProvider>
       </body>
     </html>
   );
