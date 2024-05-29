@@ -1,13 +1,14 @@
 import NextAuth from "next-auth";
-import { Adapter } from "next-auth/adapters";
-import Google from "next-auth/providers/google";
+import GoogleProvider from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import { NextRequest, NextResponse } from "next/server";
-import { ZodError } from "zod";
 import { signInSchema } from "./lib/zod";
 import db from "@/../utils/db";
+import { authConfig } from '../auth.config';
+
+
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -23,12 +24,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new Error("Email is required");
           }
           if (typeof credentials.password !== "string") {
-            throw new Error("Password is required"); // Corrected error message
+            throw new Error("Password is required"); 
           }
 
           const { email, password } = await signInSchema.parseAsync(
             credentials
           );
+
 
           const result = await db.authenticate(email, password);
 
@@ -46,6 +48,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           return user;
         } catch (error) {
+
           console.error(error);
 
           if (error.message === "Error Recieving Information From Database") {
@@ -56,13 +59,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw error;
           }
           
-          // if (error instanceof ZodError) {
-          //   return null;
-          // }
-          // throw error; // Rethrow other errors to be handled by NextAuth
         }
       },
     }),
-    Google,
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET
+    }),
   ],
 });

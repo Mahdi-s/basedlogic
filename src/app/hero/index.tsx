@@ -1,4 +1,4 @@
-import Hero from "./form";
+import Hero from "./page";
 import "./../../app/globals.css";
 import { auth } from "@/auth";
 
