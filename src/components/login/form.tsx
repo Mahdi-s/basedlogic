@@ -7,7 +7,7 @@ import { IconBrandGoogle } from "@tabler/icons-react";
 import React from "react";
 import { cn } from "@/../utils/cn";
 import { handleLogin, handleSigninGoogle } from "../../lib/actions";
-
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function Form() {
@@ -65,7 +65,7 @@ export default function Form() {
         <button
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="button"
-          onClick={googleSignIn}
+          onClick={() => signIn('Google')}
         >
           <div className="flex justify-center items-center space-x-2">
             <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />

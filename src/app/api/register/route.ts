@@ -10,9 +10,9 @@ export default async function POST(request: Request) {
     console.log("registering user");
     console.log({ username, email, password });
 
-    //const hashedPassword = await hash(password, 10);
+    const hashedPassword = await hash(password, 10);
 
-    const record = await db.register(username, email, password);
+    const record = await db.register(username, email, hashedPassword);
     console.log("record");
     console.log({ record });
     

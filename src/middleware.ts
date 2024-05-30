@@ -1,5 +1,5 @@
 import NextAuth from 'next-auth';
-import { authConfig } from '../auth.config';
+import { authConfig } from './auth.config';
 import type { NextRequest } from 'next/server'
 
 export default NextAuth(authConfig).auth;
@@ -15,8 +15,12 @@ export function middleware(request: NextRequest) {
   if (currentUser && !request.nextUrl.pathname.startsWith('/dashboard')) {
     return Response.redirect(new URL('/dashboard', request.url))
   }
+
+  if (currentUser && request.nextUrl.pathname.startsWith('/login')) {
+    return Response.redirect(new URL('/collectionPage', request.url))
+  }
  
-  // if (!currentUser && !request.nextUrl.pathname.startsWith('/hero')) {
+  // if (currentUser && !request.nextUrl.pathname.startsWith('/hero')) {
   //   return Response.redirect(new URL('/hero', request.url))
   // }
 }

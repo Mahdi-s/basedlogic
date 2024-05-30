@@ -22,3 +22,28 @@ export async function handleLogin(formData) {
           // Handle error here, for example show a notification to the user
         }
 }
+
+
+export default async function CreateUser(credentials){
+
+  console.log(credentials);
+  const response = await fetch('/api/register',{
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        username: credentials.username,
+        email: credentials.email,
+        password: credentials.password,
+      }),
+  });
+
+  if (!response.ok) {
+    console.error(`Error: ${response.status}`);
+    const errorData = await response.text();
+    console.error(errorData);
+    throw new Error(`Error: ${response.status} - ${errorData}`);
+  }
+  return response;
+}
