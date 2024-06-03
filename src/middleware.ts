@@ -12,11 +12,15 @@ export const config = {
 export function middleware(request: NextRequest) {
   const currentUser = request.cookies.get('currentUser')?.value
  
-  if (currentUser && !request.nextUrl.pathname.startsWith('/dashboard')) {
-    return Response.redirect(new URL('/dashboard', request.url))
-  }
+  // if (currentUser && !request.nextUrl.pathname.startsWith('/dashboard')) {
+  //   return Response.redirect(new URL('/dashboard', request.url))
+  // }
 
   if (currentUser && request.nextUrl.pathname.startsWith('/login')) {
+    return Response.redirect(new URL('/collectionPage', request.url))
+  }
+
+  if (currentUser && request.nextUrl.pathname.startsWith('/signup')) {
     return Response.redirect(new URL('/collectionPage', request.url))
   }
  

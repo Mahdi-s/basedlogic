@@ -10,21 +10,23 @@ export async function handleSigninGoogle() {
 
 
 export async function handleLogin(formData) {
-        console.log("1 In handle login");
-        const email = formData.get("email");
-        const password = formData.get("password");
-        try {
-          const response = await signIn("credentials", { email, password });
-          console.log("In handle login");
-          console.log(response);
-        } catch (error) {
-          console.error("Error during sign in:", error);
-          // Handle error here, for example show a notification to the user
-        }
+  try {
+    await signIn('credentials', formData)
+  } catch (error) {
+    if (error) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.'
+        default:
+          return 'Something went wrong.'
+      }
+    }
+    throw error
+  }
 }
 
 
-export default async function CreateUser(credentials){
+export async function CreateUser(credentials){
 
   console.log(credentials);
   const response = await fetch('/api/register',{

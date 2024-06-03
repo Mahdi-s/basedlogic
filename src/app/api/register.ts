@@ -1,7 +1,6 @@
 import db from "@/../utils/db";
 import { hash } from "bcryptjs";
-import { NextResponse } from 'next/server';
-
+import { NextResponse } from "next/server";
 
 export default async function POST(request: Request) {
   try {
@@ -15,16 +14,13 @@ export default async function POST(request: Request) {
     const record = await db.register(username, email, hashedPassword);
     console.log("record");
     console.log({ record });
-    
   } catch (e) {
     console.log({ e });
   }
 
   return NextResponse.json({ message: "success" });
-
 }
 
-
 export const config = {
-    runtime: 'edge',
+  runtime: "edge",
 };

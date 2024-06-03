@@ -1,4 +1,4 @@
-import SignupForm from "./form";
+import SignupForm from "@/components/signup/form";
 import React from 'react';
 import "./../../app/globals.css";
 

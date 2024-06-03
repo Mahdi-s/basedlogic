@@ -6,7 +6,7 @@ import { cn } from "@/../../utils/cn";
 import "./../../app/globals.css";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import CreateUser from "../../lib/actions";
+import { CreateUser } from "../../lib/actions";
 import { IconBrandGoogle } from "@tabler/icons-react";
 import { signIn } from "next-auth/react";
 
@@ -18,20 +18,17 @@ export default function SignupForm() {
     event.preventDefault();
     setIsSubmitting(true);
 
-
-    fetch('/api/register', { method: 'HEAD' })
-  .then(response => {
-    if (response.ok) {
-      console.log('Endpoint is reachable');
-    } else {
-      console.log('Endpoint is not reachable');
-    }
-  })
-  .catch(error => {
-    console.log('Error:', error);
-  });
-
-  
+    fetch("/api/register", { method: "HEAD" })
+      .then((response) => {
+        if (response.ok) {
+          console.log("Endpoint is reachable");
+        } else {
+          console.log("Endpoint is not reachable");
+        }
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
 
     const formData = new FormData(event.currentTarget);
     const credentials = {
@@ -52,7 +49,7 @@ export default function SignupForm() {
     } catch (error) {
       console.error("Error during sign up:", error);
       alert("An error occurred during sign up. Please try again.");
-    }finally {
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -137,7 +134,6 @@ export default function SignupForm() {
             </div>
             <BottomGradient />
           </button>
-
         </form>
       </div>
     </motion.div>
