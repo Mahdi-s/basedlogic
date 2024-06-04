@@ -4,6 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./lib/zod";
 import db from "@/../utils/db";
 import { authConfig } from './auth.config';
+import { hash } from "bcryptjs";
 
 
 
@@ -32,12 +33,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new Error("Password is required"); 
           }
 
-          const { email, password } = await signInSchema.parseAsync(
-            credentials
-          );
 
 
-          const result = await db.authenticate(email, password);
+          // const { email, password } = await signInSchema.parseAsync(
+          //   credentials
+          // );
+          const hashedPassword = await hash(credentials.password, 10);
+
+
+
+          const result = await db.authenticate(credentials.email, hashedPassword);
 
           if (!result) {
             throw new Error("Error Recieving Information From Database");

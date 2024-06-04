@@ -1,6 +1,8 @@
-// src/utils/actions.ts
 "use server";
 import { signIn } from "@/auth";
+import { NextResponse } from "next/server";
+import { hash } from "bcryptjs";
+import db from "@/../utils/db";
 
 export async function handleSigninGoogle() {
     console.log("In handle signin google");
@@ -26,26 +28,24 @@ export async function handleLogin(formData) {
 }
 
 
+
 export async function CreateUser(credentials){
+  try {
+    const { username, email, password } = credentials;
+    // validate email and password
+    console.log("registering user");
+    console.log({ username, email, password });
 
-  console.log(credentials);
-  const response = await fetch('/api/register',{
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        username: credentials.username,
-        email: credentials.email,
-        password: credentials.password,
-      }),
-  });
+    const hashedPassword = await hash(password, 10);
 
-  if (!response.ok) {
-    console.error(`Error: ${response.status}`);
-    const errorData = await response.text();
-    console.error(errorData);
-    throw new Error(`Error: ${response.status} - ${errorData}`);
+    const record = await db.register(username, email, hashedPassword);
+    console.log("record");
+    console.log({ record });
+    
+  } catch (e) {
+    console.log({ e });
+    return { message: e };
   }
-  return response;
+
+  return { message: "success" };
 }

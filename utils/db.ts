@@ -33,7 +33,8 @@ export class DatabaseClient {
                 password: password,
                 passwordConfirm: password,
             });
-
+            console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            console.log(this.client.authStore.isValid);
             return result;
         } catch (err) {
             return err;
