@@ -6,11 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write .",
+    "test": "jest",
+    "type-check": "tsc --noEmit",
+    "precommit": "lint-staged",
+    "prepush": "npm run lint && npm run test",
+    "prod": "npm run build && npm run start"
   },
   "dependencies": {
     "@auth/pg-adapter": "^1.0.0",
-    "@auth/prisma-adapter": "^2.0.0",
     "@radix-ui/react-label": "^2.0.2",
     "@tabler/icons-react": "^3.1.0",
     "@vercel/postgres": "^0.8.0",

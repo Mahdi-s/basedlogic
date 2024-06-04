@@ -1,14 +1,20 @@
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./lib/zod";
 import db from "@/../utils/db";
-import { authConfig } from '../auth.config';
+import { authConfig } from './auth.config';
+import { hash } from "bcryptjs";
 
 
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
+  callbacks: {
+    session({ session }) {
+      return session;
+    },
+  },
   providers: [
     Credentials({
       credentials: {
@@ -27,9 +33,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new Error("Password is required"); 
           }
 
+          //const hashedPassword = await hash(credentials.password, 10);
+
           const { email, password } = await signInSchema.parseAsync(
             credentials
           );
+          
+
 
 
           const result = await db.authenticate(email, password);
@@ -62,9 +72,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
       },
     }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET
-    }),
+    Google,
   ],
 });
