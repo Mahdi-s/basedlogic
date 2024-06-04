@@ -33,16 +33,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new Error("Password is required"); 
           }
 
+          //const hashedPassword = await hash(credentials.password, 10);
+
+          const { email, password } = await signInSchema.parseAsync(
+            credentials
+          );
+          
 
 
-          // const { email, password } = await signInSchema.parseAsync(
-          //   credentials
-          // );
-          const hashedPassword = await hash(credentials.password, 10);
 
-
-
-          const result = await db.authenticate(credentials.email, hashedPassword);
+          const result = await db.authenticate(email, password);
 
           if (!result) {
             throw new Error("Error Recieving Information From Database");

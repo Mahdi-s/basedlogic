@@ -41,7 +41,7 @@ export async function CreateUser(credentials){
     const record = await db.register(username, email, hashedPassword);
     console.log("record");
     console.log({ record });
-    
+
   } catch (e) {
     console.log({ e });
     return { message: e };

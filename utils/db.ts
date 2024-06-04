@@ -15,12 +15,12 @@ export class DatabaseClient {
             const result = await this.client.collection("users").authWithPassword(email, password);
             
             if (!result?.token) {
-                throw new Error("Invalid email or password");
+                throw JSON.parse(JSON.stringify(new Error("Invalid email or password")));
             }
             return result;
         } catch (err) {
             console.error(err);
-            throw new Error("Invalid email or password");
+            throw JSON.parse(JSON.stringify(new Error("Invalid email or password")));
         }
     }
 
@@ -33,8 +33,7 @@ export class DatabaseClient {
                 password: password,
                 passwordConfirm: password,
             });
-            console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-            console.log(this.client.authStore.isValid);
+
             return result;
         } catch (err) {
             return err;

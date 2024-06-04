@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { CreateUser, handleLogin } from "../../lib/actions";
 import { IconBrandGoogle } from "@tabler/icons-react";
+import { signIn } from "@/auth";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -17,19 +18,27 @@ export default function SignupForm() {
     event.preventDefault();
     setIsSubmitting(true);
     const formData = new FormData(event.currentTarget);
+    console.log("formData");
+    console.log({ formData });
     const credentials = {
       username: formData.get("username"),
       email: formData.get("email"),
       password: formData.get("password"),
     };
+    // const logIncredentials = {
+    //   email: formData.get("email"),
+    //   password: formData.get("password"),
+    // };
+
     try {
       const response = await CreateUser(credentials);
+      //console.log("!!!!!!!!",response,"!!!!!!!!!!!!!!"); 
+      await handleLogin(formData);
       if (response.message !== "success") {
         alert(`Sign up failed: ${response.message}`);
       } else {
-          //await handleLogin(formData);
-          router.push("/collectionPage");
-          console.log("Sign up successful");
+        router.push("/collectionPage");
+        console.log("Sign up successful");
       }
     } catch (error) {
       console.error("Error during sign up:", error);
