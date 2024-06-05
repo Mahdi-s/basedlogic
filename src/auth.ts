@@ -3,25 +3,38 @@ import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./lib/zod";
 import db from "@/../utils/db";
-import { authConfig } from './auth.config';
+import { authConfig } from '../auth.config';
 import { hash } from "bcryptjs";
-
 
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
   callbacks: {
-    session({ session }) {
+    async session({ session, token }) {
+      if (token) {
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.username = token.username as string;
+      }
       return session;
     },
-  },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id as string;
+        token.email = user.email as string;
+        token.username = user.username as string;
+      }
+      return token;
+    },
+},
   providers: [
     Credentials({
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials) => {
+      authorize: async (credentials, req) => {
+        console.log("In credentials auth");
         try {
           if (!credentials || !credentials.email || !credentials.password) {
             throw new Error("Missing credentials");
@@ -32,24 +45,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           if (typeof credentials.password !== "string") {
             throw new Error("Password is required"); 
           }
+          const { email, password } = credentials;
+          const parsedCredentials = await signInSchema.parseAsync({ email, password });
 
-          //const hashedPassword = await hash(credentials.password, 10);
+         // const hashedPassword = await hash(password, 10);
 
-          const { email, password } = await signInSchema.parseAsync(
-            credentials
-          );
-          
+          const result = await db.authenticate(parsedCredentials.email, parsedCredentials.password);
 
-
-
-          const result = await db.authenticate(email, password);
 
           if (!result) {
             throw new Error("Error Recieving Information From Database");
           }
-          console.log("result --- ");
-          console.log(result);
-          console.log("---------- ");
 
           const user = {
             id: result.record.id,

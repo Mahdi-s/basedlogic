@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { CreateUser, handleLogin } from "../../lib/actions";
 import { IconBrandGoogle } from "@tabler/icons-react";
-import { signIn } from "@/auth";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -25,19 +24,14 @@ export default function SignupForm() {
       email: formData.get("email"),
       password: formData.get("password"),
     };
-    // const logIncredentials = {
-    //   email: formData.get("email"),
-    //   password: formData.get("password"),
-    // };
+
 
     try {
       const response = await CreateUser(credentials);
-      //console.log("!!!!!!!!",response,"!!!!!!!!!!!!!!"); 
-      await handleLogin(formData);
       if (response.message !== "success") {
         alert(`Sign up failed: ${response.message}`);
       } else {
-        router.push("/collectionPage");
+        router.push("/login");
         console.log("Sign up successful");
       }
     } catch (error) {

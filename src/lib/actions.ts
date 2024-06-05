@@ -1,47 +1,39 @@
 "use server";
-import { signIn } from "@/auth";
-import { NextResponse } from "next/server";
+import { signIn } from "../auth";
 import { hash } from "bcryptjs";
 import db from "@/../utils/db";
 
 export async function handleSigninGoogle() {
-    console.log("In handle signin google");
-  signIn("google")
+  console.log("In handle signin google");
+  signIn("google");
 }
 
-
-
-export async function handleLogin(formData) {
+export async function handleLogin(
+  prevState: string | undefined,
+  formData: FormData
+) {
   try {
-    await signIn('credentials', formData)
+    const user = await signIn("credentials", formData);
   } catch (error) {
     if (error) {
       switch (error.type) {
-        case 'CredentialsSignin':
-          return 'Invalid credentials.'
+        case "CredentialsSignin":
+          return "Invalid credentials.";
         default:
-          return 'Something went wrong.'
+          return "Something went wrong.";
       }
     }
-    throw error
+    throw error;
   }
+  return { message: "success" };
 }
 
-
-
-export async function CreateUser(credentials){
+export async function CreateUser(credentials) {
   try {
     const { username, email, password } = credentials;
-    // validate email and password
-    console.log("registering user");
-    console.log({ username, email, password });
-
-    const hashedPassword = await hash(password, 10);
-
-    const record = await db.register(username, email, hashedPassword);
-    console.log("record");
-    console.log({ record });
-
+    // TODO: validate email and password
+    //const hashedPassword = await hash(password, 10);
+    const record = await db.register(username, email, password);
   } catch (e) {
     console.log({ e });
     return { message: e };

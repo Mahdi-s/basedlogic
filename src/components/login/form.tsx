@@ -9,10 +9,14 @@ import { handleLogin, handleSigninGoogle } from "../../lib/actions";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useFormState, useFormStatus } from "react-dom";
+import {
+  ExclamationCircleIcon
+} from '@heroicons/react/24/outline';
+
 
 export default function Form() {
   const router = useRouter();
-  const [errorMessage, dispatch] = useFormState(handleLogin, undefined);
+  //const [errorMessage, dispatch] = useFormState(handleLogin, undefined);
 
   const googleSignIn = (event) => {
     handleSigninGoogle();
@@ -23,19 +27,18 @@ export default function Form() {
     router.push("/signup");
   };
 
-  // const submitLogin = async (event) => {
-  //   event.preventDefault();
-  //   const formData = new FormData(event.target);
-  //   await handleLogin(formData);
-  // };
-  // const handleSignup = (e) => {
-  //   e.preventDefault();
-  //   router.push('/signup'); // replace '/signup' with your signup page route
-  // };
+  const handleLoginAndRedirect = async (event) => {
+    //event.preventDefault();
+    const formData = new FormData(event.target);
+    const loginSuccessful = await handleLogin(undefined, formData);
+    if (typeof loginSuccessful === "object" && loginSuccessful.message === "success") {
+      router.push('/collectionPage'); // replace '/collection' with the path to your collection page
+    }
+  };
 
   return (
     <>
-      <form className="my-8" action={dispatch}>
+      <form className="my-5" onSubmit={handleLoginAndRedirect}>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
           <Input
@@ -56,9 +59,20 @@ export default function Form() {
           />
         </LabelInputContainer>
 
-        <div className="flex flex-col justify-center items-center ">
-          <div>{errorMessage && <p>{errorMessage}</p>}</div>
+        <div className="flex flex-col justify-center items-center">
           <LoginButton />
+          {/* <div
+          className="flex h-8 items-end space-x-1"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {errorMessage && (
+            <>
+              <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+              <p className="text-sm text-red-500">{errorMessage}</p>
+            </>
+          )}
+        </div> */}
         </div>
       </form>
 
