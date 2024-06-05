@@ -13,12 +13,13 @@ export class DatabaseClient {
     async authenticate (email: string, password: string) {
         try {
             const result = await this.client.collection("users").authWithPassword(email, password);
-            
             if (!result?.token) {
                 throw JSON.parse(JSON.stringify(new Error("Invalid email or password")));
             }
+            //this.client.authStore.clear();
             return result;
         } catch (err) {
+            console.log(" In DB error --- ");
             console.error(err);
             throw JSON.parse(JSON.stringify(new Error("Invalid email or password")));
         }

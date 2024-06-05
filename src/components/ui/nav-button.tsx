@@ -3,8 +3,8 @@
 import { useSession, signOut, signIn } from "next-auth/react";
 
 export default function NavButton() {
-  const { data: session } = useSession();
-  const user = session?.user;
+  const session = useSession();
+  const user = session.data?.user;
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -16,7 +16,7 @@ export default function NavButton() {
     signIn();
   };
 
-  console.log("user", user);
+  console.log("user", session);
   return (
     <div>
       {user && (

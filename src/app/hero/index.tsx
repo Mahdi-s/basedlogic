@@ -1,6 +1,6 @@
 import Hero from "./page";
 import "./../../app/globals.css";
-import { auth } from "@/auth";
+import { auth } from "../../auth";
 
 export default function HeroPage({ user }) {
   return (
