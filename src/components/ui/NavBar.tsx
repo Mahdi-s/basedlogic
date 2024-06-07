@@ -1,7 +1,5 @@
-"use client";
 import Link from "next/link";
 import NavButton from "./nav-button";
-
 
 export default function NavBar() {
   return (
@@ -10,7 +8,7 @@ export default function NavBar() {
         <Link href="/" className="font-bold">
           Based Logic
         </Link>
-        <NavButton/>
+        <NavButton />
       </nav>
     </header>    
   );

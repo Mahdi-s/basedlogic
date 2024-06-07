@@ -1,11 +1,13 @@
 "use client";
-
 import { useSession, signOut, signIn } from "next-auth/react";
 
 export default function NavButton() {
   const session = useSession();
-  const user = session.data?.user;
-
+  console.log("In Nav Btn session", session);
+  const user = session?.data?.user?.email;
+  console.log("In Nav Btn user", user);
+  
+  
   const handleLogout = (e) => {
     e.preventDefault();
     signOut();
@@ -16,10 +18,10 @@ export default function NavButton() {
     signIn();
   };
 
-  console.log("user", session);
+  
   return (
     <div>
-      {user && (
+      {session && session.status !== 'unauthenticated' ?  (
         <form onSubmit={handleLogout}>
           <button
             type="submit"
@@ -28,9 +30,8 @@ export default function NavButton() {
             Logout
           </button>
         </form>
-      )}
-      {!user && (
-        <>
+      ) :
+       (
           <form onSubmit={handleLogin}>
             <button
               type="submit"
@@ -39,7 +40,6 @@ export default function NavButton() {
               Login
             </button>
           </form>
-        </>
       )}
     </div>
   );

@@ -2,39 +2,45 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./lib/zod";
-import db from "@/../utils/db";
-import { authConfig } from '../auth.config';
+import { authConfig } from "./auth.config";
 import { hash } from "bcryptjs";
+import { parse } from "path";
+import PocketBase from "pocketbase";
+import { cookies } from "next/headers";
 
+
+const POCKET_BASE_URL = "http://127.0.0.1:8090";
+const db = new PocketBase(POCKET_BASE_URL);
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
   callbacks: {
     async session({ session, token }) {
-      if (token) {
-        session.user.id = token.id as string;
-        session.user.email = token.email as string;
-        session.user.username = token.username as string;
-      }
+      console.log("session callback", { session, token });
+      session.user = {
+        ...session.user,
+        name: token.username as string,
+        email: token.email as string,
+        username: token.username as string,
+      };
       return session;
     },
     async jwt({ token, user }) {
+      console.log("jwt callback", { token, user });
       if (user) {
-        token.id = user.id as string;
         token.email = user.email as string;
-        token.username = user.username as string;
+        token.name = user.username as string;
       }
       return token;
     },
-},
+  },
   providers: [
     Credentials({
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials, req) => {
-        console.log("In credentials auth");
+      authorize: async (credentials) => {
         try {
           if (!credentials || !credentials.email || !credentials.password) {
             throw new Error("Missing credentials");
@@ -43,41 +49,52 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new Error("Email is required");
           }
           if (typeof credentials.password !== "string") {
-            throw new Error("Password is required"); 
+            throw new Error("Password is required");
           }
           const { email, password } = credentials;
-          const parsedCredentials = await signInSchema.parseAsync({ email, password });
+          const parsedCredentials = await signInSchema.parseAsync({
+            email,
+            password,
+          });
 
-         // const hashedPassword = await hash(password, 10);
+          //const hashedPassword = await hash(password, 10);
 
-          const result = await db.authenticate(parsedCredentials.email, parsedCredentials.password);
-
-
-          if (!result) {
-            throw new Error("Error Recieving Information From Database");
-          }
+          const result = await db
+            .collection("users")
+            .authWithPassword(parsedCredentials.email, parsedCredentials.password);
 
           const user = {
             id: result.record.id,
+            email: result.record.email,
             username: result.record.username,
           };
 
+          cookies().set("token", db.authStore.token ?? "", {
+            secure: true,
+          });
+          cookies().set("user", JSON.stringify(db.authStore.model), {
+            secure: true,
+          });
+          console.log("Cookies set:", cookies().get("token"), " ^^^^^ ",cookies().get("user"));
+
+          console.log("*****user*****", user);
+          console.log("*****");
+          
+
           return user;
         } catch (error) {
-
-          console.error(error);
-
-          if (error.message === "Error Recieving Information From Database") {
-            // Handle authentication failure
-            throw new Error("Invalid email or password");
-          } else {
-            // Rethrow other errors to be handled by NextAuth
-            throw error;
-          }
-          
+          console.error('Error during authentication:', error);
+          return null;
         }
       },
     }),
     Google,
   ],
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
 });
+
+export default auth;

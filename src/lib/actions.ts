@@ -1,6 +1,6 @@
-"use server";
+'use server';
+
 import { signIn } from "../auth";
-import { hash } from "bcryptjs";
 import db from "@/../utils/db";
 
 export async function handleSigninGoogle() {
@@ -13,7 +13,10 @@ export async function handleLogin(
   formData: FormData
 ) {
   try {
+    console.log("In handle login");
+    console.log("formData", formData);
     const user = await signIn("credentials", formData);
+    return { message: "success" };
   } catch (error) {
     if (error) {
       switch (error.type) {
@@ -25,7 +28,6 @@ export async function handleLogin(
     }
     throw error;
   }
-  return { message: "success" };
 }
 
 export async function CreateUser(credentials) {
@@ -38,6 +40,5 @@ export async function CreateUser(credentials) {
     console.log({ e });
     return { message: e };
   }
-
   return { message: "success" };
 }
