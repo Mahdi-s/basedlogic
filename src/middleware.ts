@@ -1,5 +1,5 @@
 import NextAuth from 'next-auth';
-import { authConfig } from '../auth.config';
+import { authConfig } from './auth.config';
 import type { NextRequest } from 'next/server'
 
 export default NextAuth(authConfig).auth;
@@ -10,8 +10,10 @@ export const config = {
 };
 
 export function middleware(request: NextRequest) {
+
+  
   const currentUser = request.cookies.get('currentUser')?.value
- 
+  console.log("In MiddleWare currentUser", currentUser);
   // if (!currentUser && request.nextUrl.pathname.startsWith('/collectionPage')) {
   //   return Response.redirect(new URL('/hero', request.url))
   // }

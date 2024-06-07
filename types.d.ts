@@ -17,15 +17,3 @@ declare module "next-auth" {
   }
 }
 
-
-declare module 'express-session' {
-  interface SessionData {
-    user: { [key: string]: any }; // Use any or replace with a more specific type
-  }
-}
-
-declare module 'express-serve-static-core' {
-  interface Request {
-    session?: Session & Partial<SessionData>;
-  }
-}

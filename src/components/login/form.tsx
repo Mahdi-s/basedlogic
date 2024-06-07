@@ -2,25 +2,25 @@
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { IconBrandGoogle } from "@tabler/icons-react";
-import React from "react";
+// import { IconBrandGoogle } from "@tabler/icons-react";
+import React, { useState }   from "react";
 import { cn } from "@/../utils/cn";
 import { handleLogin, handleSigninGoogle } from "../../lib/actions";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useFormState, useFormStatus } from "react-dom";
-import {
-  ExclamationCircleIcon
-} from '@heroicons/react/24/outline';
+import { useFormStatus } from "react-dom";
+// import {
+//   ExclamationCircleIcon
+// } from '@heroicons/react/24/outline';
 
 
 export default function Form() {
   const router = useRouter();
-  //const [errorMessage, dispatch] = useFormState(handleLogin, undefined);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const googleSignIn = (event) => {
-    handleSigninGoogle();
-  };
+
+  // const googleSignIn = (event) => {
+  //   handleSigninGoogle();
+  // };
 
   const submitSignup = (event) => {
     event.preventDefault();
@@ -28,11 +28,14 @@ export default function Form() {
   };
 
   const handleLoginAndRedirect = async (event) => {
-    //event.preventDefault();
+    event.preventDefault();
     const formData = new FormData(event.target);
-    const loginSuccessful = await handleLogin(undefined, formData);
-    if (typeof loginSuccessful === "object" && loginSuccessful.message === "success") {
+    try {
+      await handleLogin(undefined, formData);
       router.push('/collectionPage'); // replace '/collection' with the path to your collection page
+    } catch (error) {
+      console.error(error);
+      setErrorMessage('Invalid credentials. Please try again.');
     }
   };
 
@@ -61,23 +64,12 @@ export default function Form() {
 
         <div className="flex flex-col justify-center items-center">
           <LoginButton />
-          {/* <div
-          className="flex h-8 items-end space-x-1"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          {errorMessage && (
-            <>
-              <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-              <p className="text-sm text-red-500">{errorMessage}</p>
-            </>
-          )}
-        </div> */}
+          {errorMessage && <div className="error-bubble">{errorMessage}</div>}
         </div>
       </form>
 
       <div className="flex flex-col justify-center items-center space-y-2">
-        <button
+        {/* <button
           className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
           type="button"
           onClick={() => signIn("Google")}
@@ -89,7 +81,7 @@ export default function Form() {
             </span>
           </div>
           <BottomGradient />
-        </button>
+        </button> */}
 
         <button
           className="bg-transparent relative group/btn block w-1/2 text-white  h-10 font-medium"
