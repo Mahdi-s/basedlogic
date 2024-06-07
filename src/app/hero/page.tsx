@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Highlight } from "@/components/ui/hero-highlight";
 import React from "react";
 import "./../../app/globals.css";
-import Buttons from "@/components/hero/buttons";
+import Buttons from "@/components/hero/form";
 
 export default function Hero({ user }) {
   return (

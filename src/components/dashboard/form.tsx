@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import "./../../app/globals.css";
 import { useRouter } from "next/navigation";
-import { HeroHighlight } from "@/components/ui/hero-highlight";
 import { Meteors } from "@/components/ui/meteors";
 import {
   Chart as ChartJS,
@@ -108,6 +107,7 @@ function getInitialInteractionData() {
 }
 
 export default function CollectionForm() {
+  
   const [sentences, setSentences] = useState<Sentence[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [interactionData, setInteractionData] = useState(

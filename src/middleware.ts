@@ -12,7 +12,7 @@ export const config = {
 export function middleware(request: NextRequest) {
 
   
-  const currentUser = request.cookies.get('currentUser')?.value
+  const currentUser = request.cookies.get('user')?.value
   console.log("In MiddleWare currentUser", currentUser);
   // if (!currentUser && request.nextUrl.pathname.startsWith('/collectionPage')) {
   //   return Response.redirect(new URL('/hero', request.url))

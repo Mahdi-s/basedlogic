@@ -1,7 +1,12 @@
 'use server';
 
-import { signIn } from "../auth";
-import db from "@/../utils/db";
+import { signIn, signOut } from "../auth";
+import PocketBase from "pocketbase";
+import Cookies from 'js-cookie';
+
+const POCKET_BASE_URL = "http://127.0.0.1:8090";
+const db = new PocketBase(POCKET_BASE_URL);
+
 
 export async function handleSigninGoogle() {
   console.log("In handle signin google");
@@ -28,6 +33,16 @@ export async function handleLogin(
     }
     throw error;
   }
+}
+
+export async function logout() {
+  console.log("In logout");
+  await signOut();
+  db.authStore.clear();
+  // Clear cookies
+  Cookies.remove("token");
+  Cookies.remove("user");
+  return { message: "success" };
 }
 
 export async function CreateUser(credentials) {

@@ -7,7 +7,7 @@ interface HeroProps {
     user: User;
   }
 
-export default function Buttons({ user }) {
+export default function buttons({ user }) {
   const router = useRouter();
 
   const navigateToOpinionCollection = () => {
