@@ -58,7 +58,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
 
           //const hashedPassword = await hash(password, 10);
-
+          db.authStore.clear();
           const result = await db
             .collection("users")
             .authWithPassword(parsedCredentials.email, parsedCredentials.password);

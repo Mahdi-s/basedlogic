@@ -37,6 +37,7 @@ export default function Form() {
       console.error(error);
       setErrorMessage('Invalid credentials. Please try again.');
     }
+    router.refresh(); 
   };
 
   return (

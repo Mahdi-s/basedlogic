@@ -1,13 +1,20 @@
 "use client";
 import { useSession, signOut, signIn } from "next-auth/react";
+import { useEffect, useState } from 'react';
 
 export default function NavButton() {
-  const session = useSession();
-  console.log("In Nav Btn session", session);
-  const user = session?.data?.user?.email;
-  console.log("In Nav Btn user", user);
+  // const session = useSession();
+  // console.log("In Nav Btn session", session);
+  // const user = session?.data?.user?.email;
+  // console.log("In Nav Btn user", user);
   
-  
+  const [user, setUser] = useState<string | null | undefined>(null);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    setUser(session?.user?.email);
+  }, [session]);
+
   const handleLogout = (e) => {
     e.preventDefault();
     signOut();
@@ -21,7 +28,7 @@ export default function NavButton() {
   
   return (
     <div>
-      {session && session.status !== 'unauthenticated' ?  (
+      {user ?  (
         <form onSubmit={handleLogout}>
           <button
             type="submit"
