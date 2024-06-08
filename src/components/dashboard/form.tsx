@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import "./../../app/globals.css";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Meteors } from "@/components/ui/meteors";
 import {
   Chart as ChartJS,
@@ -13,6 +14,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { getSentences } from "@/../utils/getData";
 
 // Register ChartJS components
 ChartJS.register(
@@ -107,7 +109,7 @@ function getInitialInteractionData() {
 }
 
 export default function CollectionForm() {
-  
+  const { data: session } = useSession();
   const [sentences, setSentences] = useState<Sentence[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [interactionData, setInteractionData] = useState(
@@ -121,24 +123,11 @@ export default function CollectionForm() {
   const router = useRouter(); // Use Next.js useRouter hook for navigation
 
   useEffect(() => {
-    const fetchData = async () => {
-      // const response = await fetch('/api/getData');
-      // const data = await response.json();
-      // setSentences(data);
-      // setIsUserLoggedIn(false);
-    };
-
-    // TODO: Simulate user login check (replace with actual auth check logic)
-    // Set true if user is logged in
-    fetchData();
-
-    // if (!isUserLoggedIn) {
-    //   setTimeout(() => {
-    //     //alert('Please consider creating an account for a better experience!');
-    //     setShowModal(true);
-    //   }, 120); // 2 minutes
-    // }
-  }, [isUserLoggedIn]);
+    const response = getSentences({ session });
+    console.log("response", response);
+    // setSentences(data);
+    // setIsUserLoggedIn(false);
+  }, [session]);
 
   useEffect(() => {
     if (!isUserLoggedIn) {
@@ -248,6 +237,15 @@ export default function CollectionForm() {
   return (
     <div className="flex flex-col justify-center items-center space-y-2">
       <main className="flex min-h-screen flex-col items-center justify-center p-4 lg:p-7 space-y-4 lg:space-y-7">
+        <button
+          className="w-full sm:w-1/3 lg:w-auto p-[3px] relative mt-5"
+          onClick={() => handleButtonClick(0, "rewind")}
+        >
+          <div className="absolute inset-0 bg-orange-300 rounded-lg" />
+          <div className="px-4 py-3 bg-black relative group transition duration-200 text-white hover:bg-transparent text-xl lg:text-2xl">
+            Rewind ←
+          </div>
+        </button>
         <div className="w-full max-w-sm lg:max-w-lg xl:max-w-2xl relative">
           <div className="absolute inset-0 h-full w-full transform scale-90 lg:scale-100 rounded-full blur-3xl" />
           <div className="relative shadow-xl bg-gray-900 border border-gray-800 px-4 py-8 h-full overflow-hidden rounded-2xl flex flex-col justify-end items-start ">
@@ -279,16 +277,6 @@ export default function CollectionForm() {
         <div className="flex justify-center space-x-4 lg:space-x-6 w-full">
           <button
             className="w-full sm:w-1/3 lg:w-auto p-[3px] relative mt-5"
-            onClick={() => handleButtonClick(1, "disagree")}
-          >
-            <div className="absolute inset-0 bg-red-500 rounded-lg" />
-            <div className="px-4 py-3 bg-black relative group transition duration-200 text-white hover:bg-transparent text-xl lg:text-2xl">
-              Disagree X
-            </div>
-          </button>
-
-          <button
-            className="w-full sm:w-1/3 lg:w-auto p-[3px] relative mt-5"
             onClick={() => handleButtonClick(1, "agree")}
           >
             <div className="absolute inset-0 bg-green-500 rounded-lg" />
@@ -299,11 +287,21 @@ export default function CollectionForm() {
 
           <button
             className="w-full sm:w-1/3 lg:w-auto p-[3px] relative mt-5"
-            onClick={() => handleButtonClick(0, "rewind")}
+            onClick={() => handleButtonClick(1, "disagree")}
           >
-            <div className="absolute inset-0 bg-orange-300 rounded-lg" />
+            <div className="absolute inset-0 bg-yellow-500 rounded-lg" />
             <div className="px-4 py-3 bg-black relative group transition duration-200 text-white hover:bg-transparent text-xl lg:text-2xl">
-              Rewind ←
+              Neutral ☐
+            </div>
+          </button>
+
+          <button
+            className="w-full sm:w-1/3 lg:w-auto p-[3px] relative mt-5"
+            onClick={() => handleButtonClick(1, "disagree")}
+          >
+            <div className="absolute inset-0 bg-red-500 rounded-lg" />
+            <div className="px-4 py-3 bg-black relative group transition duration-200 text-white hover:bg-transparent text-xl lg:text-2xl">
+              Disagree X
             </div>
           </button>
         </div>

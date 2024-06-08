@@ -20,7 +20,7 @@ export async function handleLogin(
   try {
     console.log("In handle login");
     console.log("formData", formData);
-    const user = await signIn("credentials", formData);
+    const user = await signIn("credentials", {formData, redirect: true, callbackUrl: "/dashboard"});
     return { message: "success" };
   } catch (error) {
     if (error) {
@@ -50,7 +50,12 @@ export async function CreateUser(credentials) {
     const { username, email, password } = credentials;
     // TODO: validate email and password
     //const hashedPassword = await hash(password, 10);
-    const record = await db.register(username, email, password);
+    const result = await db.collection("users").create({
+      username: username,
+      email: email,
+      password: password,
+      passwordConfirm: password,
+    });
   } catch (e) {
     console.log({ e });
     return { message: e };

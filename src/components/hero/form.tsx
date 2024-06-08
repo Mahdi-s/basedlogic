@@ -11,7 +11,7 @@ export default function buttons({ user }) {
   const router = useRouter();
 
   const navigateToOpinionCollection = () => {
-    router.push("/collectionPage");
+    router.push("/dashboard");
   };
 
   return (

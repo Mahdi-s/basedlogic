@@ -19,11 +19,11 @@ export function middleware(request: NextRequest) {
   // }
 
   if (currentUser && request.nextUrl.pathname.startsWith('/login')) {
-    return Response.redirect(new URL('/collectionPage', request.url))
+    return Response.redirect(new URL('/dashboard', request.url))
   }
 
   if (currentUser && request.nextUrl.pathname.startsWith('/signup')) {
-    return Response.redirect(new URL('/collectionPage', request.url))
+    return Response.redirect(new URL('/dashboard', request.url))
   }
  
   // if (currentUser && !request.nextUrl.pathname.startsWith('/hero')) {

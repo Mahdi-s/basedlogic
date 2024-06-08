@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 //import AuthProvider from "@/components/AuthProviders";
-import { SessionProvider } from "next-auth/react";
+import SessionProvider from "./SessionProvider";
 import { HeroHighlight } from "@/components/ui/hero-highlight";
 import NavBar from "@/components/ui/NavBar";
 
