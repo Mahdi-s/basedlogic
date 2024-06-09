@@ -4,8 +4,8 @@ import { signIn, signOut } from "../auth";
 import PocketBase from "pocketbase";
 import Cookies from 'js-cookie';
 
-const POCKET_BASE_URL = "http://127.0.0.1:8090";
-const db = new PocketBase(POCKET_BASE_URL);
+
+const db = new PocketBase(process.env.POCKETBASE_URL);
 
 
 export async function handleSigninGoogle() {
@@ -20,7 +20,7 @@ export async function handleLogin(
   try {
     console.log("In handle login");
     console.log("formData", formData);
-    const user = await signIn("credentials", {formData, redirect: true, callbackUrl: "/dashboard"});
+    const user = await signIn("credentials", formData);
     return { message: "success" };
   } catch (error) {
     if (error) {

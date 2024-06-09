@@ -123,10 +123,17 @@ export default function CollectionForm() {
   const router = useRouter(); // Use Next.js useRouter hook for navigation
 
   useEffect(() => {
-    const response = getSentences({ session });
-    console.log("response", response);
-    // setSentences(data);
-    // setIsUserLoggedIn(false);
+    const fetchSentences = async () => {
+      try {
+        const response = await getSentences({ session });
+        const data = JSON.parse(response);
+        setSentences(data);
+        setIsUserLoggedIn(false);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    fetchSentences();
   }, [session]);
 
   useEffect(() => {
@@ -140,7 +147,7 @@ export default function CollectionForm() {
 
   const handleButtonClick = (
     increment: number,
-    action: "agree" | "disagree" | "rewind"
+    action: "agree" | "disagree" | "neutral" | "rewind"
   ) => {
     if (action === "rewind" && history.length > 0) {
       const previousState = history.pop() || {
@@ -261,14 +268,10 @@ export default function CollectionForm() {
               )}
             </h1>
 
-            <p className="font-bold text-neutral-700 text-white mb-4 relative z-50">
+            {/* <p className="font-bold text-neutral-700 text-white mb-4 relative z-50">
               {sentences.length > 0 &&
                 `Topic: ${sentences[currentIndex].topic}`}
-            </p>
-            <p className="font-bold text-neutral-700 text-white mb-4 relative z-50">
-              {sentences.length > 0 &&
-                `Affiliation: ${sentences[currentIndex].tag}`}
-            </p>
+            </p> */}
 
             <Meteors number={20} />
           </div>
@@ -287,7 +290,7 @@ export default function CollectionForm() {
 
           <button
             className="w-full sm:w-1/3 lg:w-auto p-[3px] relative mt-5"
-            onClick={() => handleButtonClick(1, "disagree")}
+            onClick={() => handleButtonClick(1, "neutral")} //TODO: change to neutral
           >
             <div className="absolute inset-0 bg-yellow-500 rounded-lg" />
             <div className="px-4 py-3 bg-black relative group transition duration-200 text-white hover:bg-transparent text-xl lg:text-2xl">
