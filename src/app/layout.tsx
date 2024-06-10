@@ -24,7 +24,8 @@ export default function RootLayout({
       <body className={inter.className}>
         <SessionProvider>
           <HeroHighlight>
-            <NavBar/>
+            <NavBar
+             />
             {children}
           </HeroHighlight>
         </SessionProvider>
