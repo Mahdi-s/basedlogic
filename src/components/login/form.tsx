@@ -32,12 +32,13 @@ export default function Form() {
     const formData = new FormData(event.target);
     try {
       await handleLogin(undefined, formData);
-      router.push('/collectionPage'); // replace '/collection' with the path to your collection page
+      router.refresh(); 
+      router.push('/dashboard'); // replace '/collection' with the path to your collection page
     } catch (error) {
       console.error(error);
       setErrorMessage('Invalid credentials. Please try again.');
     }
-    router.refresh(); 
+    
   };
 
   return (

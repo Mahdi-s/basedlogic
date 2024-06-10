@@ -1,22 +1,19 @@
 'use server';
-import { NextApiRequest, NextApiResponse } from 'next';
 import PocketBase from 'pocketbase';
-import { getSession } from 'next-auth/react';
 
 console.log("URL === ",process.env.POCKETBASE_URL);
 const pb = new PocketBase(process.env.POCKETBASE_URL);
 
 export  async function getSentences({session}) {
   try {
-    // Get the session to check if the user is logged in
-    
-
     let sentences;
     let totalItems;
     let totalPages = 1;
     const perPage = 30; 
+    console.log("session", session);
 
     if (session) {
+      console.log(" if session", session);
       const userId = session.user.id;
 
       // Fetch user inputs to get the list of sentence IDs the user has already interacted with
@@ -35,8 +32,12 @@ export  async function getSentences({session}) {
       totalItems = result.totalItems;
       totalPages = result.totalPages;
     } else {
+      console.log("else session", session);
+
       // Fetch all sentences
       const allSentences = await pb.collection('sentences').getFullList();
+
+      // console.log("allSentences", allSentences);
 
       // Group sentences by topic
       const sentencesByCategory = allSentences.reduce((acc, sentence) => {
@@ -62,13 +63,16 @@ export  async function getSentences({session}) {
       collectionId: sentence.collectionId,
       sentence: sentence.sentence,
       topic: sentence.topic,
-      political_affiliation: sentence.political_affiliation,
+      tag: sentence.political_affiliation,
     }));
+
+
     
-    return formattedSentences;
+    return JSON.stringify(formattedSentences);
   } catch (error) {
     // Handle errors that might occur during database operations
     console.error('Database error:', error);
+    console.log("------------------------");
     throw new Error('Failed to load sentences from the database');
   }
 }

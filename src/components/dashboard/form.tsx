@@ -15,6 +15,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { getSentences } from "@/../utils/getData";
+import Modal from "./signUpModal";
 
 // Register ChartJS components
 ChartJS.register(
@@ -44,50 +45,7 @@ interface InteractionData {
   conservative: { agree: number; disagree: number };
 }
 
-function Modal({ isOpen, onClose, onSignUp }) {
-  if (!isOpen) return null;
 
-  return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          position: "relative",
-          padding: "20px",
-          backgroundColor: "#fff",
-          borderRadius: "10px",
-          width: "300px",
-          textAlign: "center",
-        }}
-      >
-        <h2>Please consider creating an account for a better experience!</h2>
-        <button
-          onClick={onSignUp}
-          style={{ margin: "10px", padding: "5px 20px" }}
-        >
-          Sign Up
-        </button>
-        <button
-          onClick={onClose}
-          style={{ position: "absolute", top: "10px", right: "10px" }}
-        >
-          Close Window
-        </button>
-      </div>
-    </div>
-  );
-}
 
 function ensureDataIntegrity(data) {
   return {
@@ -123,10 +81,17 @@ export default function CollectionForm() {
   const router = useRouter(); // Use Next.js useRouter hook for navigation
 
   useEffect(() => {
-    const response = getSentences({ session });
-    console.log("response", response);
-    // setSentences(data);
-    // setIsUserLoggedIn(false);
+    const fetchSentences = async () => {
+      try {
+        const response = await getSentences({ session });
+        const data = JSON.parse(response);
+        setSentences(data);
+        setIsUserLoggedIn(false);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    fetchSentences();
   }, [session]);
 
   useEffect(() => {
@@ -140,7 +105,7 @@ export default function CollectionForm() {
 
   const handleButtonClick = (
     increment: number,
-    action: "agree" | "disagree" | "rewind"
+    action: "agree" | "disagree" | "neutral" | "rewind"
   ) => {
     if (action === "rewind" && history.length > 0) {
       const previousState = history.pop() || {
@@ -260,16 +225,6 @@ export default function CollectionForm() {
                 <span className="animate-loading-dots">Loading...</span>
               )}
             </h1>
-
-            <p className="font-bold text-neutral-700 text-white mb-4 relative z-50">
-              {sentences.length > 0 &&
-                `Topic: ${sentences[currentIndex].topic}`}
-            </p>
-            <p className="font-bold text-neutral-700 text-white mb-4 relative z-50">
-              {sentences.length > 0 &&
-                `Affiliation: ${sentences[currentIndex].tag}`}
-            </p>
-
             <Meteors number={20} />
           </div>
         </div>
@@ -287,7 +242,7 @@ export default function CollectionForm() {
 
           <button
             className="w-full sm:w-1/3 lg:w-auto p-[3px] relative mt-5"
-            onClick={() => handleButtonClick(1, "disagree")}
+            onClick={() => handleButtonClick(1, "neutral")} //TODO: change to neutral
           >
             <div className="absolute inset-0 bg-yellow-500 rounded-lg" />
             <div className="px-4 py-3 bg-black relative group transition duration-200 text-white hover:bg-transparent text-xl lg:text-2xl">

@@ -9,8 +9,8 @@ import PocketBase from "pocketbase";
 import { cookies } from "next/headers";
 
 
-const POCKET_BASE_URL = "http://127.0.0.1:8090";
-const db = new PocketBase(POCKET_BASE_URL);
+
+const db = new PocketBase(process.env.POCKETBASE_URL);
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
@@ -42,6 +42,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         try {
+          console.log("credentials", credentials.email, credentials.password);
+          
           if (!credentials || !credentials.email || !credentials.password) {
             throw new Error("Missing credentials");
           }
@@ -52,16 +54,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new Error("Password is required");
           }
           const { email, password } = credentials;
+          console.log("email", email);
+          console.log("password", password);
           const parsedCredentials = await signInSchema.parseAsync({
             email,
             password,
           });
+          console.log("parsedCredentials", parsedCredentials);
 
           //const hashedPassword = await hash(password, 10);
           db.authStore.clear();
           const result = await db
             .collection("users")
             .authWithPassword(parsedCredentials.email, parsedCredentials.password);
+
+          console.log("result", result);
 
           const user = {
             id: result.record.id,
@@ -75,10 +82,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           cookies().set("user", JSON.stringify(db.authStore.model), {
             secure: true,
           });
-          console.log("Cookies set:", cookies().get("token"), " ^^^^^ ",cookies().get("user"));
 
-          console.log("*****user*****", user);
-          console.log("*****");
+          // console.log("Cookies set:", cookies().get("token"), " ^^^^^ ",cookies().get("user"));
+
+          // console.log("*****user*****", user);
+          // console.log("*****");
           
 
           return user;
